@@ -5,12 +5,12 @@
     "moduleResolution": "bundler",
     "lib": ["ESNext"],
     "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["bun-types"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "main.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }

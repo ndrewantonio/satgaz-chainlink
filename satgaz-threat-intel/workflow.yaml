@@ -19,16 +19,15 @@ staging-settings:
   user-workflow:
     workflow-name: "satgaz-threat-intel-staging"
   workflow-artifacts:
-    workflow-path: "./main.ts"
+    workflow-path: "./src/main.ts"
     config-path: "./config.staging.json"
-    secrets-path: ""
-    
+    secrets-path: "../secrets.yaml"
 
 # ==========================================================================
 production-settings:
   user-workflow:
     workflow-name: "satgaz-threat-intel-production"
   workflow-artifacts:
-    workflow-path: "./main.ts"
+    workflow-path: "./src/main.ts"
     config-path: "./config.production.json"
-    secrets-path: ""
+    secrets-path: "../secrets.yaml"
