@@ -1,23 +1,41 @@
-import { CronCapability, handler, Runner, type Runtime } from "@chainlink/cre-sdk";
-
-export type Config = {
-  schedule: string;
-};
-
-export const onCronTrigger = (runtime: Runtime<Config>): string => {
-  runtime.log("Hello world! Workflow triggered.");
-  return "Hello world!";
-};
+import {
+  handler,
+  HTTPCapability,
+  EVMClient,
+  getNetwork,
+  hexToBase64,
+  Runner,
+} from "@chainlink/cre-sdk";
+import { keccak256, toBytes } from "viem";
+import { Config } from "./types/config.type";
+import { onHttpSubmission } from "./handlers/http";
+import { onEvmLogTrigger } from "./handlers/evm";
 
 export const initWorkflow = (config: Config) => {
-  const cron = new CronCapability();
+  const httpCapability = new HTTPCapability();
+
+  const network = getNetwork({
+    chainFamily: "evm",
+    chainSelectorName: config.chainSelectorName,
+  });
+  if (!network) {
+    throw new Error(`Unsupported chain: ${config.chainSelectorName}`);
+  }
+
+  const evmClient = new EVMClient(network.chainSelector.selector);
+
+  const submissionPaidSig = keccak256(
+    toBytes("SubmissionPaid(address,bytes32,uint256,uint256,bytes)"),
+  );
 
   return [
+    handler(httpCapability.trigger({}), onHttpSubmission),
     handler(
-      cron.trigger(
-        { schedule: config.schedule }
-      ),
-      onCronTrigger
+      evmClient.logTrigger({
+        addresses: [hexToBase64(config.submissionEscrowAddress)],
+        topics: [{ values: [hexToBase64(submissionPaidSig)] }],
+      }),
+      onEvmLogTrigger,
     ),
   ];
 };

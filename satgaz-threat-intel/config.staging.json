@@ -1,3 +1,10 @@
 {
-  "schedule": "*/30 * * * * *"
+  "chainSelectorName": "ethereum-testnet-sepolia",
+  "submissionEscrowAddress": "0x0000000000000000000000000000000000000000",
+  "threatOracleAddress": "0x0000000000000000000000000000000000000000",
+  "bountyVaultAddress": "0x0000000000000000000000000000000000000000",
+  "aiAnalysisUrl": "https://api.openai.com/v1/chat/completions",
+  "defiLlamaBaseUrl": "https://api.llama.fi",
+  "minPublishScore": 60,
+  "maxBatchSize": 10
 }
