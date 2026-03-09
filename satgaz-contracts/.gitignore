@@ -1,0 +1,22 @@
+# Foundry build artifacts and cache
+out/
+cache/
+cache_forge/
+broadcast/
+lib/forge-std/
+
+# Environment variables (Crucial for keeping private keys and RPC URLs safe)
+.env
+.env.local
+.env.*
+!.env.example
+
+# Node/JavaScript dependencies (if you have a frontend or hybrid setup)
+node_modules/
+dist/
+
+# IDE and OS specific files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
