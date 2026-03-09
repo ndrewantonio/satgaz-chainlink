@@ -1,5 +1,5 @@
 {
-  "chainSelectorName": "ethereum-testnet-sepolia",
+  "chainSelectorName": "ethereum-testnet-sepolia-base-1",
   "submissionEscrowAddress": "0x0000000000000000000000000000000000000000",
   "threatOracleAddress": "0x0000000000000000000000000000000000000000",
   "bountyVaultAddress": "0x0000000000000000000000000000000000000000",
