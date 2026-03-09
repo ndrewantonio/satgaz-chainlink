@@ -1,5 +1,6 @@
 import { RequestPayload } from "../types/payload.type";
 import {
+  EVMClient,
   getNetwork,
   decodeJson,
   type Runtime,
@@ -14,6 +15,7 @@ import { runThreatAnalysis } from "../utils/runThreatAnalysis";
 export const onHttpSubmission = (
   runtime: Runtime<Config>,
   triggerOutput: HTTPPayload,
+  escrowEvmClient: EVMClient,
 ): ThreatVerdict => {
   runtime.log("Received submission via HTTP trigger");
 
@@ -37,6 +39,7 @@ export const onHttpSubmission = (
     `Processing ${submission.threatType} threat against ${submission.targetProtocol}`,
   );
 
+  // Resolve the target chain (where the threat occurred)
   const network = getNetwork({
     chainFamily: "evm",
     chainSelectorName: submission.targetChain,
@@ -46,14 +49,16 @@ export const onHttpSubmission = (
   }
   const chainSelector = network.chainSelector.selector;
 
-  // Payment gate — verify the payment tx emitted SubmissionPaid from the escrow
+  // Payment gate — verify the payment tx emitted SubmissionPaid from the escrow.
+  // Uses the init-time EVMClient (Base Sepolia) rather than creating a new one,
+  // since dynamically created clients may not have access to the runtime's RPC config.
   if (!submission.paymentTxHash) {
     throw new Error("HTTP submissions must include paymentTxHash");
   }
   const paymentResult = verifyPayment(
     runtime,
     submission.paymentTxHash,
-    chainSelector,
+    escrowEvmClient,
     runtime.config.submissionEscrowAddress,
   );
   if (!paymentResult.valid) {

@@ -28,11 +28,9 @@ export type PaymentVerificationResult = {
 export function verifyPayment(
   runtime: Runtime<Config>,
   txHash: string,
-  chainSelector: bigint,
+  evmClient: EVMClient,
   escrowAddress: string,
 ): PaymentVerificationResult {
-  const evmClient = new EVMClient(chainSelector);
-
   try {
     const receiptResult = evmClient.getTransactionReceipt(runtime, {
       hash: hexToBase64(txHash),

@@ -5,6 +5,8 @@ import {
   getNetwork,
   hexToBase64,
   Runner,
+  type Runtime,
+  type HTTPPayload,
 } from "@chainlink/cre-sdk";
 import { keccak256, toBytes } from "viem";
 import { Config } from "./types/config.type";
@@ -29,7 +31,11 @@ export const initWorkflow = (config: Config) => {
   );
 
   return [
-    handler(httpCapability.trigger({}), onHttpSubmission),
+    handler(
+      httpCapability.trigger({}),
+      (runtime: Runtime<Config>, trigger: HTTPPayload) =>
+        onHttpSubmission(runtime, trigger, evmClient),
+    ),
     handler(
       evmClient.logTrigger({
         addresses: [hexToBase64(config.submissionEscrowAddress)],
